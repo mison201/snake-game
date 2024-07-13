@@ -1,7 +1,11 @@
 const canvas = document.getElementById("gameCanvas")
 const ctx = canvas.getContext("2d")
+const widthInput = document.getElementById("widthInput")
+const heightInput = document.getElementById("heightInput")
+const countdownElement = document.getElementById("countdown")
 const gridSize = 20
-const canvasSize = 400
+let canvasWidth = 400
+let canvasHeight = 400
 let snake = [
   { x: 0, y: 0 },
   { x: gridSize, y: 0 },
@@ -11,7 +15,6 @@ let direction = { x: gridSize, y: 0 }
 let bait = getRandomBait()
 let gameOver = false
 let gameInterval
-const countdownElement = document.getElementById("countdown")
 
 document.getElementById("startButton").addEventListener("click", startGame)
 document.addEventListener("keydown", changeDirection)
@@ -20,6 +23,10 @@ function startGame() {
   if (gameInterval) {
     clearInterval(gameInterval)
   }
+  canvasWidth = parseInt(widthInput.value)
+  canvasHeight = parseInt(heightInput.value)
+  canvas.width = canvasWidth
+  canvas.height = canvasHeight
   resetGame()
   startCountdown(5, () => {
     gameInterval = setInterval(gameLoop, 1000)
@@ -101,8 +108,8 @@ function drawBait() {
 function getRandomBait() {
   let baitX, baitY
   while (true) {
-    baitX = Math.floor(Math.random() * (canvasSize / gridSize)) * gridSize
-    baitY = Math.floor(Math.random() * (canvasSize / gridSize)) * gridSize
+    baitX = Math.floor(Math.random() * (canvasWidth / gridSize)) * gridSize
+    baitY = Math.floor(Math.random() * (canvasHeight / gridSize)) * gridSize
     if (!snake.some((part) => part.x === baitX && part.y === baitY)) {
       break
     }
@@ -138,7 +145,7 @@ function changeDirection(event) {
 function checkGameOver() {
   const head = snake[0]
   const hitWall =
-    head.x < 0 || head.x >= canvasSize || head.y < 0 || head.y >= canvasSize
+    head.x < 0 || head.x >= canvasWidth || head.y < 0 || head.y >= canvasHeight
   const hitSelf = snake
     .slice(1)
     .some((part) => part.x === head.x && part.y === head.y)
@@ -147,7 +154,7 @@ function checkGameOver() {
     gameOver = true
   }
 
-  if (snake.length === (canvasSize / gridSize) ** 2) {
+  if (snake.length === (canvasWidth / gridSize) * (canvasHeight / gridSize)) {
     clearInterval(gameInterval)
     alert("You win")
     gameOver = true
