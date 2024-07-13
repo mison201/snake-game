@@ -52,8 +52,8 @@ function startCountdown(seconds, callback) {
 function resetGame() {
   snake = [
     { x: 0, y: 0 },
-    { x: gridSize, y: 0 },
-    { x: gridSize * 2, y: 0 },
+    { x: -gridSize, y: 0 },
+    { x: -gridSize * 2, y: 0 },
   ]
   direction = { x: gridSize, y: 0 }
   bait = getRandomBait()
