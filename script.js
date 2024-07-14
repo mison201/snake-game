@@ -14,7 +14,8 @@ let snake
 let direction
 let bait
 let gameOver = false
-let gameInterval
+let lastRenderTime = 0
+let speed = 5 // Moves per second
 
 startButton.addEventListener("click", startGame)
 document.addEventListener("keydown", changeDirection)
@@ -30,9 +31,6 @@ function startGame() {
 
   errorMessage.textContent = ""
 
-  if (gameInterval) {
-    clearInterval(gameInterval)
-  }
   canvasWidth = width
   canvasHeight = height
   gridSize =
@@ -44,7 +42,7 @@ function startGame() {
   startButton.style.display = "none"
   startCountdown(5, () => {
     overlayElement.style.display = "none"
-    gameInterval = setInterval(gameLoop, 1000)
+    window.requestAnimationFrame(mainLoop)
   })
 }
 
@@ -66,24 +64,30 @@ function startCountdown(seconds, callback) {
 
 function resetGame() {
   snake = [
+    { x: gridSize * 2, y: 0 },
+    { x: gridSize, y: 0 },
     { x: 0, y: 0 },
-    { x: -gridSize, y: 0 },
-    { x: -gridSize * 2, y: 0 },
   ]
   direction = { x: gridSize, y: 0 }
   bait = getRandomBait()
   gameOver = false
+  lastRenderTime = 0
   clearCanvas()
   drawSnake()
   drawBait()
 }
 
-function gameLoop() {
+function mainLoop(currentTime) {
   if (gameOver) {
-    clearInterval(gameInterval)
     alert("You lose")
     return
   }
+
+  window.requestAnimationFrame(mainLoop)
+  const secondsSinceLastRender = (currentTime - lastRenderTime) / 1000
+  if (secondsSinceLastRender < 1 / speed) return
+
+  lastRenderTime = currentTime
 
   clearCanvas()
   moveSnake()
@@ -140,19 +144,15 @@ function changeDirection(event) {
   const goingLeft = direction.x === -gridSize
 
   if (keyPressed === 37 && !goingRight) {
-    // left arrow
     direction = { x: -gridSize, y: 0 }
   }
   if (keyPressed === 38 && !goingDown) {
-    // up arrow
     direction = { x: 0, y: -gridSize }
   }
   if (keyPressed === 39 && !goingLeft) {
-    // right arrow
     direction = { x: gridSize, y: 0 }
   }
   if (keyPressed === 40 && !goingUp) {
-    // down arrow
     direction = { x: 0, y: gridSize }
   }
 }
@@ -170,7 +170,6 @@ function checkGameOver() {
   }
 
   if (snake.length === (canvasWidth / gridSize) * (canvasHeight / gridSize)) {
-    clearInterval(gameInterval)
     alert("You win")
     gameOver = true
   }
