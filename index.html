@@ -13,10 +13,16 @@
             <input type="number" id="widthInput" value="400">
             <label for="heightInput">Height:</label>
             <input type="number" id="heightInput" value="400">
-            <button id="startButton">Start Game</button>
         </div>
-        <div id="countdown" class="countdown"></div>
-        <canvas id="gameCanvas"></canvas>
+
+        <div class="container">
+            <div id="overlay">
+                <button id="startButton">Start Game</button>
+                <div id="countdown" class="countdown"></div>
+            </div>
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
+        </div>
+
     </div>
     <script src="script.js"></script>
 </body>

@@ -3,20 +3,18 @@ const ctx = canvas.getContext("2d")
 const widthInput = document.getElementById("widthInput")
 const heightInput = document.getElementById("heightInput")
 const countdownElement = document.getElementById("countdown")
+const overlayElement = document.getElementById("overlay")
+const startButton = document.getElementById("startButton")
 const gridSize = 20
 let canvasWidth = 400
 let canvasHeight = 400
-let snake = [
-  { x: 0, y: 0 },
-  { x: gridSize, y: 0 },
-  { x: gridSize * 2, y: 0 },
-]
-let direction = { x: gridSize, y: 0 }
-let bait = getRandomBait()
+let snake
+let direction
+let bait
 let gameOver = false
 let gameInterval
 
-document.getElementById("startButton").addEventListener("click", startGame)
+startButton.addEventListener("click", startGame)
 document.addEventListener("keydown", changeDirection)
 
 function startGame() {
@@ -28,7 +26,9 @@ function startGame() {
   canvas.width = canvasWidth
   canvas.height = canvasHeight
   resetGame()
+  startButton.style.display = "none"
   startCountdown(5, () => {
+    overlayElement.style.display = "none"
     gameInterval = setInterval(gameLoop, 1000)
   })
 }
