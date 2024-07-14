@@ -41,6 +41,11 @@ button:hover {
   background-color: #45a049;
 }
 
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
+
 #overlay {
   position: absolute;
   top: 0;
@@ -67,4 +72,9 @@ canvas {
   background-color: #fff;
   display: block;
   margin: 0 auto;
+}
+
+.error-message {
+  position: absolute;
+  margin-top: 60px;
 }

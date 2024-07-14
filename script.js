@@ -5,9 +5,11 @@ const heightInput = document.getElementById("heightInput")
 const countdownElement = document.getElementById("countdown")
 const overlayElement = document.getElementById("overlay")
 const startButton = document.getElementById("startButton")
-const gridSize = 20
+const errorMessage = document.getElementById("errorMessage")
+const minGridSize = 40
 let canvasWidth = 400
 let canvasHeight = 400
+let gridSize = minGridSize
 let snake
 let direction
 let bait
@@ -18,11 +20,24 @@ startButton.addEventListener("click", startGame)
 document.addEventListener("keydown", changeDirection)
 
 function startGame() {
+  const width = parseInt(widthInput.value)
+  const height = parseInt(heightInput.value)
+
+  if (width <= minGridSize || height <= minGridSize) {
+    errorMessage.textContent = `Width and height must be greater than ${minGridSize}.`
+    return
+  }
+
+  errorMessage.textContent = ""
+
   if (gameInterval) {
     clearInterval(gameInterval)
   }
-  canvasWidth = parseInt(widthInput.value)
-  canvasHeight = parseInt(heightInput.value)
+  canvasWidth = width
+  canvasHeight = height
+  gridSize =
+    Math.min(canvasWidth, canvasHeight) /
+    Math.floor(Math.min(canvasWidth, canvasHeight) / minGridSize)
   canvas.width = canvasWidth
   canvas.height = canvasHeight
   resetGame()
