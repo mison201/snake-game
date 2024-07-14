@@ -7,30 +7,29 @@
 </head>
 
 <body>
+    <!-- Main container for the game -->
     <div class="container">
+        <!-- Settings panel for width and height input -->
         <div class="settings">
             <label for="widthInput">Width:</label>
             <input type="number" id="widthInput" value="400">
             <label for="heightInput">Height:</label>
             <input type="number" id="heightInput" value="400">
         </div>
-
         <div class="container">
             <div id="overlay">
                 <div id="successMessage" class="success-message"></div>
-
                 <button id="startButton">Start Game</button>
                 <button id="resetButton" style="display:none;">Reset Game</button>
-
                 <div id="errorMessage" class="error-message"></div>
-
-
                 <div id="countdown" class="countdown"></div>
             </div>
+            <!-- Game area containing the canvas -->
             <div id="gameArea">
                 <canvas id="gameCanvas" width="400" height="400"></canvas>
             </div>
         </div>
+        <!-- Display for game statistics -->
         <div class="stats">
             <div>Speed: <span id="speedDisplay">1</span>x</div>
             <div>Baits Eaten: <span id="baitsEatenDisplay">0</span></div>

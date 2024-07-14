@@ -90,19 +90,3 @@ canvas {
   margin-top: 20px;
   font-size: 18px;
 }
-
-.blink {
-  animation: blink-animation 0.5s linear;
-}
-
-@keyframes blink-animation {
-  0% {
-    background-color: yellow;
-  }
-  50% {
-    background-color: green;
-  }
-  100% {
-    background-color: yellow;
-  }
-}

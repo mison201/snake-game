@@ -10,6 +10,7 @@ const errorMessage = document.getElementById("errorMessage")
 const successMessage = document.getElementById("successMessage")
 const speedDisplay = document.getElementById("speedDisplay")
 const baitsEatenDisplay = document.getElementById("baitsEatenDisplay")
+
 const minGridSize = 40
 let canvasWidth = 400
 let canvasHeight = 400
@@ -23,8 +24,8 @@ let speed = 1 // Initial moves per second
 let speedIncrementInterval = 5000 // Time interval to increase speed in milliseconds
 let lastSpeedIncrementTime = 0
 let baitsEaten = 0 // Baits eaten counter
-let isBlinking = false
 
+// Event listeners for game controls
 startButton.addEventListener("click", startGame)
 resetButton.addEventListener("click", resetGame)
 document.addEventListener("keydown", changeDirection)
@@ -99,7 +100,6 @@ function mainLoop(currentTime) {
     resetButton.style.display = "block"
     overlayElement.style.display = "flex"
     successMessage.textContent = "You lose!"
-
     return
   }
 
@@ -227,6 +227,7 @@ function drawSnakeHead(part, partSize) {
   )
   ctx.fill()
 }
+
 function drawSnakeBody(part) {
   ctx.beginPath()
   ctx.arc(
