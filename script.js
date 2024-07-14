@@ -5,7 +5,9 @@ const heightInput = document.getElementById("heightInput")
 const countdownElement = document.getElementById("countdown")
 const overlayElement = document.getElementById("overlay")
 const startButton = document.getElementById("startButton")
+const resetButton = document.getElementById("resetButton")
 const errorMessage = document.getElementById("errorMessage")
+const successMessage = document.getElementById("successMessage")
 const speedDisplay = document.getElementById("speedDisplay")
 const baitsEatenDisplay = document.getElementById("baitsEatenDisplay")
 const minGridSize = 40
@@ -23,6 +25,7 @@ let lastSpeedIncrementTime = 0
 let baitsEaten = 0 // Baits eaten counter
 
 startButton.addEventListener("click", startGame)
+resetButton.addEventListener("click", resetGame)
 document.addEventListener("keydown", changeDirection)
 
 function startGame() {
@@ -35,6 +38,7 @@ function startGame() {
   }
 
   errorMessage.textContent = ""
+  successMessage.textContent = ""
 
   canvasWidth = width
   canvasHeight = height
@@ -43,9 +47,10 @@ function startGame() {
     Math.floor(Math.min(canvasWidth, canvasHeight) / minGridSize)
   canvas.width = canvasWidth
   canvas.height = canvasHeight
-  resetGame()
+  initializeGame()
   startButton.style.display = "none"
-  startCountdown(5, () => {
+  resetButton.style.display = "none"
+  startCountdown(3, () => {
     overlayElement.style.display = "none"
     window.requestAnimationFrame(mainLoop)
   })
@@ -67,9 +72,8 @@ function startCountdown(seconds, callback) {
   }, 1000)
 }
 
-function resetGame() {
+function initializeGame() {
   snake = [
-    { x: gridSize * 3, y: 0 },
     { x: gridSize * 2, y: 0 },
     { x: gridSize, y: 0 },
     { x: 0, y: 0 },
@@ -90,7 +94,11 @@ function resetGame() {
 
 function mainLoop(currentTime) {
   if (gameOver) {
-    alert("You lose")
+    overlayElement.style.display = "flex"
+    resetButton.style.display = "block"
+    overlayElement.style.display = "flex"
+    successMessage.textContent = "You lose!"
+
     return
   }
 
@@ -191,7 +199,12 @@ function checkGameOver() {
   }
 
   if (snake.length === (canvasWidth / gridSize) * (canvasHeight / gridSize)) {
-    alert("You win")
+    successMessage.textContent = "You win!"
     gameOver = true
   }
+}
+
+function resetGame() {
+  overlayElement.style.display = "flex"
+  startGame()
 }
