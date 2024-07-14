@@ -6,6 +6,8 @@ const countdownElement = document.getElementById("countdown")
 const overlayElement = document.getElementById("overlay")
 const startButton = document.getElementById("startButton")
 const errorMessage = document.getElementById("errorMessage")
+const speedDisplay = document.getElementById("speedDisplay")
+const baitsEatenDisplay = document.getElementById("baitsEatenDisplay")
 const minGridSize = 40
 let canvasWidth = 400
 let canvasHeight = 400
@@ -15,7 +17,10 @@ let direction
 let bait
 let gameOver = false
 let lastRenderTime = 0
-let speed = 5 // Moves per second
+let speed = 1 // Initial moves per second
+let speedIncrementInterval = 5000 // Time interval to increase speed in milliseconds
+let lastSpeedIncrementTime = 0
+let baitsEaten = 0 // Baits eaten counter
 
 startButton.addEventListener("click", startGame)
 document.addEventListener("keydown", changeDirection)
@@ -64,6 +69,7 @@ function startCountdown(seconds, callback) {
 
 function resetGame() {
   snake = [
+    { x: gridSize * 3, y: 0 },
     { x: gridSize * 2, y: 0 },
     { x: gridSize, y: 0 },
     { x: 0, y: 0 },
@@ -72,6 +78,11 @@ function resetGame() {
   bait = getRandomBait()
   gameOver = false
   lastRenderTime = 0
+  lastSpeedIncrementTime = performance.now()
+  speed = 1
+  baitsEaten = 0
+  speedDisplay.textContent = speed
+  baitsEatenDisplay.textContent = baitsEaten
   clearCanvas()
   drawSnake()
   drawBait()
@@ -85,6 +96,7 @@ function mainLoop(currentTime) {
 
   window.requestAnimationFrame(mainLoop)
   const secondsSinceLastRender = (currentTime - lastRenderTime) / 1000
+
   if (secondsSinceLastRender < 1 / speed) return
 
   lastRenderTime = currentTime
@@ -94,6 +106,13 @@ function mainLoop(currentTime) {
   drawSnake()
   drawBait()
   checkGameOver()
+
+  // Increase speed at defined intervals
+  if (currentTime - lastSpeedIncrementTime > speedIncrementInterval) {
+    speed += 0.5 // Increment speed
+    lastSpeedIncrementTime = currentTime
+    speedDisplay.textContent = speed.toFixed(1) // Update speed display
+  }
 }
 
 function clearCanvas() {
@@ -107,6 +126,8 @@ function moveSnake() {
 
   if (head.x === bait.x && head.y === bait.y) {
     bait = getRandomBait()
+    baitsEaten++
+    baitsEatenDisplay.textContent = baitsEaten // Update baits eaten display
   } else {
     snake.pop()
   }
