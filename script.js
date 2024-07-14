@@ -23,6 +23,7 @@ let speed = 1 // Initial moves per second
 let speedIncrementInterval = 5000 // Time interval to increase speed in milliseconds
 let lastSpeedIncrementTime = 0
 let baitsEaten = 0 // Baits eaten counter
+let isBlinking = false
 
 startButton.addEventListener("click", startGame)
 resetButton.addEventListener("click", resetGame)
@@ -136,16 +137,106 @@ function moveSnake() {
     bait = getRandomBait()
     baitsEaten++
     baitsEatenDisplay.textContent = baitsEaten // Update baits eaten display
+
+    // Temporarily increase the size of the snake
+    snake.forEach((part) => {
+      part.size = gridSize * 1.25 // Increase size by 25%
+    })
+    setTimeout(() => {
+      snake.forEach((part) => {
+        part.size = gridSize // Reset to original size
+      })
+    }, 500) // Duration of the size increase effect
   } else {
     snake.pop()
   }
 }
 
 function drawSnake() {
-  ctx.fillStyle = "green"
-  snake.forEach((part) => {
-    ctx.fillRect(part.x, part.y, gridSize, gridSize)
+  snake.forEach((part, index) => {
+    const isHead = index === 0
+    const partSize = part.size || gridSize // Use the size property or default to gridSize
+
+    ctx.fillStyle = "green"
+
+    if (isHead) {
+      drawSnakeHead(part, partSize)
+    } else {
+      drawSnakeBody(part)
+    }
   })
+}
+
+function drawSnakeHead(part, partSize) {
+  ctx.beginPath()
+  ctx.arc(
+    part.x + partSize / 2,
+    part.y + partSize / 2,
+    partSize / 2,
+    0,
+    Math.PI * 2,
+  )
+  ctx.fill()
+
+  // Draw eyes
+  ctx.fillStyle = "white"
+  ctx.beginPath()
+  ctx.arc(
+    part.x + partSize / 3,
+    part.y + partSize / 3,
+    partSize / 8,
+    0,
+    Math.PI * 2,
+  )
+  ctx.arc(
+    part.x + (2 * partSize) / 3,
+    part.y + partSize / 3,
+    partSize / 8,
+    0,
+    Math.PI * 2,
+  )
+  ctx.fill()
+
+  ctx.fillStyle = "black"
+  ctx.beginPath()
+  ctx.arc(
+    part.x + partSize / 3,
+    part.y + partSize / 3,
+    partSize / 16,
+    0,
+    Math.PI * 2,
+  )
+  ctx.arc(
+    part.x + (2 * partSize) / 3,
+    part.y + partSize / 3,
+    partSize / 16,
+    0,
+    Math.PI * 2,
+  )
+  ctx.fill()
+
+  // Draw mouth
+  ctx.fillStyle = "black"
+  ctx.beginPath()
+  ctx.arc(
+    part.x + partSize / 2,
+    part.y + (2 * partSize) / 3,
+    partSize / 8,
+    0,
+    Math.PI,
+  )
+  ctx.fill()
+}
+function drawSnakeBody(part) {
+  ctx.beginPath()
+  ctx.arc(
+    part.x + gridSize / 2,
+    part.y + gridSize / 2,
+    gridSize / 2,
+    0,
+    Math.PI * 2,
+  )
+  ctx.fill()
 }
 
 function drawBait() {
